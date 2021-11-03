@@ -1,13 +1,20 @@
 # Flutter Todo List
 
-A new Flutter project.
+## Getting Started
+
+Start the server
 
 ```
-npm install --save body-parser cors express
 node server/app.js
 ```
 
-## Getting Started
+Run the app
+
+```
+flutter run
+```
+
+## More Info
 
 This project is a starting point for a Flutter application.
 
