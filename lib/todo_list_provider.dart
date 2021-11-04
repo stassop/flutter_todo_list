@@ -54,6 +54,11 @@ class TodoListProvider extends ChangeNotifier {
 
   bool get hasError => _error != null;
 
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
+
   String get text => _text;
 
   set text(String value) {
@@ -173,11 +178,10 @@ class TodoListProvider extends ChangeNotifier {
         }),
       );
 
-      final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
-
       if (response.statusCode == 200) {
         _todos.removeWhere((todo) => todo.id == id);
       } else {
+        final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
         _error = ResponseError.fromJson(json).error;
       }
     } catch (error) {
