@@ -4,12 +4,38 @@ import 'package:provider/provider.dart';
 import 'package:flutter_todo_list/todo_list_provider.dart';
 
 class AddTodo extends StatefulWidget {
-  const AddTodo({
-    Key? key
-  }) : super(key: key);
+  const AddTodo({Key? key}) : super(key: key);
 
   @override
   State<AddTodo> createState() => _AddTodoState();
+}
+
+class AddTodoTransition extends StatelessWidget {
+  const AddTodoTransition({
+    Key? key,
+    required this.child,
+    required this.isVisible,
+  }) : super(key: key);
+
+  final Widget child;
+  final bool isVisible;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: isVisible ? 1 : 0,
+      curve: Curves.easeInOut,
+      duration: Duration(milliseconds: 500),
+      child: AnimatedSize(
+        curve: Curves.easeInOut,
+        duration: Duration(milliseconds: 500),
+        child: Visibility(
+          visible: isVisible,
+          child: child,
+        ),
+      ),
+    );
+  }
 }
 
 class _AddTodoState extends State<AddTodo> {
@@ -44,28 +70,22 @@ class _AddTodoState extends State<AddTodo> {
         if (_textFieldController.text != provider.text) {
           _textFieldController.text = provider.text;
         }
-        return AnimatedSize(
-          curve: Curves.easeInOut,
-          duration: Duration(milliseconds: 500),
-          reverseDuration: Duration(milliseconds: 500),
-          child: Visibility(
-            visible: provider.isAddTodoVisible,
-            child: Container(
-              // color: Colors.red,
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: TextField(
-                maxLength: 100,
-                autofocus: true,
-                controller: _textFieldController,
-                decoration: InputDecoration(
-                  labelText: 'New todo',
-                  suffixIcon: provider.hasText
-                    ? IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: _clearTextField,
-                      )
-                    : null,
-                ),
+        return AddTodoTransition(
+          isVisible: provider.isAddTodoVisible,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            child: TextField(
+              maxLength: 100,
+              autofocus: true,
+              controller: _textFieldController,
+              decoration: InputDecoration(
+                labelText: 'New todo',
+                suffixIcon: provider.hasText
+                  ? IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: _clearTextField,
+                    )
+                  : null,
               ),
             ),
           ),

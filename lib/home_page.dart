@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_todo_list/add_todo.dart';
 import 'package:flutter_todo_list/todo_list.dart';
+import 'package:flutter_todo_list/animated_fab.dart';
 import 'package:flutter_todo_list/todo_list_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -69,9 +70,9 @@ class _HomePageState extends State<HomePage> {
               TodoList(),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: AnimatedFAB(
             onPressed: provider.hasText ? _addTodo : _toggleAddTodo,
-            child: provider.hasText ? Icon(Icons.done) : Icon(Icons.add),
+            child: provider.hasText ? const Icon(Icons.done) : const Icon(Icons.add),
             backgroundColor: provider.hasText ? Colors.green : Colors.blue,
           ),
         );
