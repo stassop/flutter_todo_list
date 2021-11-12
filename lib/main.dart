@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
       title: 'Todo List',
       home: ChangeNotifierProvider(
         create: (context) => TodoListProvider(),
-        child: HomePage(),
+        child: const HomePage(),
       ),
     );
   }

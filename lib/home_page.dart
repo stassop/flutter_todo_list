@@ -7,19 +7,13 @@ import 'package:flutter_todo_list/animated_fab.dart';
 import 'package:flutter_todo_list/todo_list_provider.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    Key? key
-  }) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  initState() {
-    super.initState();
-  }
-
   void _addTodo() {
     Provider.of<TodoListProvider>(context, listen: false).addTodo();
   }
