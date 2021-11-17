@@ -29,46 +29,56 @@ class FABTransition extends AnimatedWidget {
 }
 
 class AnimatedFAB extends StatefulWidget {
-  final Widget child;
-  final Function() onPressed;
-  final Color backgroundColor;
-
   const AnimatedFAB({
     Key? key,
     required this.child,
     required this.onPressed,
-    required this.backgroundColor,
+    this.foregroundColor,
+    this.backgroundColor,
   }) : super(key: key);
+
+  final Widget child;
+  final Function() onPressed;
+  final Color? foregroundColor;
+  final Color? backgroundColor;
 
   @override
   _AnimatedFABState createState() => _AnimatedFABState();
 }
 
 class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStateMixin {
-  late Animation<double> animation;
-  late AnimationController controller;
-  late Widget child;
-  late Color backgroundColor;
-
   @override
   void initState() {
     super.initState();
     controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     animation = CurvedAnimation(parent: controller, curve: Curves.easeInBack);
+    onPressed = widget.onPressed;
     child = widget.child;
+    foregroundColor = widget.foregroundColor;
     backgroundColor = widget.backgroundColor;
   }
+
+  late Animation<double> animation;
+  late AnimationController controller;
+  late Function() onPressed;
+  late Widget child;
+  late Color? foregroundColor;
+  late Color? backgroundColor;
 
   @override
   void didUpdateWidget(AnimatedFAB oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.child != child || widget.backgroundColor != backgroundColor) {
+    if (widget.child != child
+     || widget.foregroundColor != foregroundColor
+     || widget.backgroundColor != backgroundColor
+    ) {
       controller.reset();
       controller.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {
             child = widget.child;
+            foregroundColor = widget.foregroundColor;
             backgroundColor = widget.backgroundColor;
           });
           controller.reverse();
@@ -84,7 +94,8 @@ class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStat
       animation: animation,
       child: FloatingActionButton(
         child: child,
-        onPressed: widget.onPressed,
+        onPressed: onPressed,
+        foregroundColor: foregroundColor,
         backgroundColor: backgroundColor,
       ),
     );
