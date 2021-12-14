@@ -52,7 +52,6 @@ class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStat
     super.initState();
     controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     animation = CurvedAnimation(parent: controller, curve: Curves.easeInBack);
-    onPressed = widget.onPressed;
     child = widget.child;
     foregroundColor = widget.foregroundColor;
     backgroundColor = widget.backgroundColor;
@@ -60,7 +59,6 @@ class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStat
 
   late Animation<double> animation;
   late AnimationController controller;
-  late Function() onPressed;
   late Widget child;
   late Color? foregroundColor;
   late Color? backgroundColor;
@@ -94,7 +92,7 @@ class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStat
       animation: animation,
       child: FloatingActionButton(
         child: child,
-        onPressed: onPressed,
+        onPressed: widget.onPressed,
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor,
       ),
