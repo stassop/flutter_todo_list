@@ -34,23 +34,33 @@ class _TodoListState extends State<TodoList> {
 
   List<Widget> _buildTiles(List<Todo> todos) {
     final tiles = todos.map((Todo todo) {
+      final int index = todos.indexOf(todo);
       final bool isDone = todo.isDone;
-      return ListTile(
-        title: Text(
-          todo.text,
-          style: isDone ? _doneTextStyle : null,
+      return Dismissible(
+        key: Key('$todo$index'), // required
+        direction: DismissDirection.endToStart,
+        onDismissed: (DismissDirection direction) => _deleteTodo(todo.id),
+        child: ListTile(
+          title: Text(
+            todo.text,
+            style: isDone ? _doneTextStyle : null,
+          ),
+          leading: IconButton(
+            icon: Icon(isDone ? Icons.check_box : Icons.check_box_outline_blank),
+            color: isDone ? Colors.blue : Colors.grey,
+            onPressed: () => _toggleTodo(todo.id),
+          ),
         ),
-        leading: IconButton(
-          icon: Icon(isDone ? Icons.check_box : Icons.check_box_outline_blank),
-          color: isDone ? Colors.blue : Colors.grey,
-          onPressed: () { _toggleTodo(todo.id); },
+        background: Container(
+          color: Colors.red,
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+          ),
         ),
-        trailing: IconButton(
-          icon: Icon(Icons.delete),
-          onPressed: () { _deleteTodo(todo.id); },
-        ),
-        // onTap: () {
-        // },
       );
     });
     return ListTile.divideTiles(context: context, tiles: tiles).toList();
@@ -60,7 +70,7 @@ class _TodoListState extends State<TodoList> {
   Widget build(BuildContext context) {
     return Expanded( // accommodate for list dimensions overflow
       child: Consumer<TodoListProvider>(
-        builder: (context, provider, child) {
+        builder: (BuildContext context, TodoListProvider provider, Widget? child) {
           if (provider.todos.isNotEmpty) {
             final tiles = _buildTiles(provider.todos);
             return ListView(children: tiles);

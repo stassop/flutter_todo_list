@@ -8,6 +8,11 @@ Start the server
 node server/app.js
 ```
 
+For Android run
+```
+adb reverse tcp:3000 tcp:3000
+```
+
 Run the app
 
 ```
