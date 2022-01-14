@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_todo_list/todo_list_provider.dart';
+import 'package:flutter_todo_list/providers/todo_list_provider.dart';
 
 class TodoList extends StatefulWidget {
   const TodoList({
@@ -16,7 +16,28 @@ class _TodoListState extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoListProvider>(context, listen: false).fetchTodos();
+    Provider.of<TodoListProvider>(context, listen: false).fetchTodos(onError: showError);
+  }
+
+  void showError(String? error) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Oops!'),
+          content: Text('$error'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   final _doneTextStyle = const TextStyle(
@@ -24,12 +45,12 @@ class _TodoListState extends State<TodoList> {
     decoration: TextDecoration.lineThrough,
   );
 
-  void _toggleTodo(id) {
-    Provider.of<TodoListProvider>(context, listen: false).toggleTodo(id);
+  void _toggleTodo(int id) {
+    Provider.of<TodoListProvider>(context, listen: false).toggleTodo(id: id, onError: showError);
   }
 
-  void _deleteTodo(id) {
-    Provider.of<TodoListProvider>(context, listen: false).deleteTodo(id);
+  void _deleteTodo(int id) {
+    Provider.of<TodoListProvider>(context, listen: false).deleteTodo(id: id, onError: showError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {
@@ -74,13 +95,13 @@ class _TodoListState extends State<TodoList> {
           if (provider.todos.isNotEmpty) {
             final tiles = _buildTiles(provider.todos);
             return ListView(children: tiles);
-          } else if (provider.isFetching) {
+          } else if (provider.isBusy) {
             return Center(
               child: CircularProgressIndicator(),
             );
           } else {
             return Center(
-              child: Text('Todo list empty'),
+              child: Text('Todo List is empty'),
             );
           }
         },

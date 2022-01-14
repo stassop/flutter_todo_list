@@ -3,86 +3,36 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-// import 'package:provider/provider.dart';
 
 class Todo {
   final int id;
-  final bool isDone;
   final String text;
+  final bool isDone;
 
   const Todo({
     required this.id,
-    required this.isDone,
     required this.text,
+    required this.isDone,
   });
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
       id: json['id'] as int,
-      isDone: json['isDone'] as bool,
       text: json['text'] as String,
-    );
-  }
-}
-
-class ResponseError {
-  final String error;
-
-  const ResponseError({
-    required this.error,
-  });
-
-  factory ResponseError.fromJson(Map<String, dynamic> json) {
-    return ResponseError(
-      error: json['error'] as String,
+      isDone: json['isDone'] as bool,
     );
   }
 }
 
 class TodoListProvider extends ChangeNotifier {
   List<Todo> _todos = [];
-  String? _error = null;
-  String _text = '';
-  bool _isFetching = false;
-  bool _isAddTodoVisible = false;
-
-  bool get isFetching => _isFetching;
-
+  bool _isBusy = false;
+  // getters
+  bool get isBusy => _isBusy;
   List<Todo> get todos => _todos;
 
-  String? get error => _error;
-
-  bool get hasError => _error != null;
-
-  void clearError() {
-    _error = null;
-    notifyListeners();
-  }
-
-  String get text => _text;
-
-  set text(String value) {
-    _text = value;
-    notifyListeners();
-  }
-
-  bool get hasText => _text.length > 0;
-
-  void clearText() {
-    _text = '';
-    notifyListeners();
-  }
-
-  bool get isAddTodoVisible => _isAddTodoVisible;
-
-  void toggleAddTodo() {
-    _isAddTodoVisible = !_isAddTodoVisible;
-    notifyListeners();
-  }
-
-  void fetchTodos() async {
-    _isFetching = true;
-    _error = null;
+  void fetchTodos({required Function(String) onError}) async {
+    _isBusy = true;
 
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/'));
@@ -91,19 +41,17 @@ class TodoListProvider extends ChangeNotifier {
         _todos = list.map<Todo>((json) => Todo.fromJson(json)).toList();
       } else {
         final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
-        _error = ResponseError.fromJson(json).error;
+        onError(json['error'] as String);
       }
     } catch (error) {
-      _error = error.toString();
+      onError(error.toString());
     } finally {
-      _isFetching = false;
+      _isBusy = false;
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void addTodo() async {
-    _error = null;
-
+  void addTodo({required String text, required Function(String) onError, Function()? onSuccess}) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/add'),
@@ -112,7 +60,7 @@ class TodoListProvider extends ChangeNotifier {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(<String, dynamic>{
-          'text': _text,
+          'text': text,
         }),
       );
 
@@ -120,20 +68,20 @@ class TodoListProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         _todos.add(Todo.fromJson(json));
-        _isAddTodoVisible = false;
-        _text = '';
+        if (onSuccess != null) {
+          onSuccess();
+        }
       } else {
-        _error = ResponseError.fromJson(json).error;
+        onError(json['error'] as String);
       }
     } catch (error) {
-      _error = error.toString();
+      onError(error.toString());
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void toggleTodo(int id) async {
-    _error = null;
+  void toggleTodo({required int id, required Function(String) onError}) async {
     final bool isDone = _todos.firstWhere((todo) => todo.id == id).isDone;
 
     try {
@@ -154,18 +102,16 @@ class TodoListProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _todos = _todos.map<Todo>((todo) => todo.id == id ? Todo.fromJson(json) : todo).toList();
       } else {
-        _error = ResponseError.fromJson(json).error;
+        onError(json['error'] as String);
       }
     } catch (error) {
-      _error = error.toString();
+      onError(error.toString());
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void deleteTodo(int id) async {
-    _error = null;
-
+  void deleteTodo({required int id, required Function(String) onError}) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/delete'),
@@ -173,19 +119,17 @@ class TodoListProvider extends ChangeNotifier {
           'Accept': 'application/json',
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, dynamic>{
-          'id': id,
-        }),
+        body: jsonEncode(<String, dynamic>{'id': id}),
       );
 
       if (response.statusCode == 200) {
         _todos.removeWhere((todo) => todo.id == id);
       } else {
         final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
-        _error = ResponseError.fromJson(json).error;
+        onError(json['error'] as String);
       }
     } catch (error) {
-      _error = error.toString();
+      onError(error.toString());
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }
