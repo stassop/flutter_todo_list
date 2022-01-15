@@ -44,7 +44,7 @@ const writeTodos = (todos) => {
   });
 };
 
-const fetchTodos = async (req, res, next) => {
+const getTodos = async (req, res, next) => {
   try {
     const todos = await readTodos();
     setTimeout(() => res.json(todos), TIMEOUT);
@@ -120,7 +120,7 @@ const handleError = (err, req, res, next) => {
   res.status(500).json({ error: err.message });
 };
 
-app.get('/', fetchTodos);
+app.get('/', getTodos);
 app.post('/add', addTodo);
 app.post('/delete', deleteTodo);
 app.post('/toggle', toggleTodo);

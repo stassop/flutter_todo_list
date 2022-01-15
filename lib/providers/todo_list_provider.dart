@@ -31,7 +31,7 @@ class TodoListProvider extends ChangeNotifier {
   bool get isBusy => _isBusy;
   List<Todo> get todos => _todos;
 
-  void fetchTodos({required Function(String) onError}) async {
+  void getTodos({Function(String)? onError}) async {
     _isBusy = true;
 
     try {
@@ -41,17 +41,21 @@ class TodoListProvider extends ChangeNotifier {
         _todos = list.map<Todo>((json) => Todo.fromJson(json)).toList();
       } else {
         final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
-        onError(json['error'] as String);
+        if (onError != null) {
+          onError(json['error'] as String);
+        }
       }
     } catch (error) {
-      onError(error.toString());
+      if (onError != null) {
+        onError(error.toString());
+      }
     } finally {
       _isBusy = false;
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void addTodo({required String text, required Function(String) onError, Function()? onSuccess}) async {
+  void addTodo(String text, {Function(String)? onError, Function()? onSuccess}) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/add'),
@@ -72,16 +76,20 @@ class TodoListProvider extends ChangeNotifier {
           onSuccess();
         }
       } else {
-        onError(json['error'] as String);
+        if (onError != null) {
+          onError(json['error'] as String);
+        }
       }
     } catch (error) {
-      onError(error.toString());
+      if (onError != null) {
+        onError(error.toString());
+      }
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void toggleTodo({required int id, required Function(String) onError}) async {
+  void toggleTodo(int id, {Function(String)? onError}) async {
     final bool isDone = _todos.firstWhere((todo) => todo.id == id).isDone;
 
     try {
@@ -102,16 +110,20 @@ class TodoListProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _todos = _todos.map<Todo>((todo) => todo.id == id ? Todo.fromJson(json) : todo).toList();
       } else {
-        onError(json['error'] as String);
+        if (onError != null) {
+          onError(json['error'] as String);
+        }
       }
     } catch (error) {
-      onError(error.toString());
+      if (onError != null) {
+        onError(error.toString());
+      }
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }
   }
 
-  void deleteTodo({required int id, required Function(String) onError}) async {
+  void deleteTodo(int id, {Function(String)? onError}) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/delete'),
@@ -126,10 +138,14 @@ class TodoListProvider extends ChangeNotifier {
         _todos.removeWhere((todo) => todo.id == id);
       } else {
         final Map<String, dynamic> json = Map<String, dynamic>.from(jsonDecode(response.body));
-        onError(json['error'] as String);
+        if (onError != null) {
+          onError(json['error'] as String);
+        }
       }
     } catch (error) {
-      onError(error.toString());
+      if (onError != null) {
+        onError(error.toString());
+      }
     } finally {
       notifyListeners(); // notify widgets to rebuild.
     }

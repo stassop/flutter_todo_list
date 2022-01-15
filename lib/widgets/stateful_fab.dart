@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_todo_list/widgets/animated_fab.dart';
-
+import 'package:flutter_todo_list/widgets/error_dialog.dart';
 import 'package:flutter_todo_list/providers/add_todo_provider.dart';
 import 'package:flutter_todo_list/providers/todo_list_provider.dart';
 
@@ -16,36 +16,19 @@ class StatefulFab extends StatefulWidget {
 class _StatefulFabState extends State<StatefulFab> {
   void _addTodo(String text) {
     Provider.of<TodoListProvider>(context, listen: false)
-      .addTodo(text: text, onSuccess: _onAddTodoSuccess, onError: _showError);
+      .addTodo(text, onSuccess: _onAddTodoSuccess, onError: _onAddTodoError);
   }
 
   void _onAddTodoSuccess() {
     Provider.of<AddTodoProvider>(context, listen: false).clear();
   }
 
-  void _toggleAddTodo() {
-    Provider.of<AddTodoProvider>(context, listen: false).toggle();
+  void _onAddTodoError(String error) {
+    ErrorDialog.show(context, error);
   }
 
-  void _showError(String error) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Oops!'),
-          content: Text(error),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _toggleAddTodo() {
+    Provider.of<AddTodoProvider>(context, listen: false).toggle();
   }
 
   @override

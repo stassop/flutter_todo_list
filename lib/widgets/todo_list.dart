@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter_todo_list/widgets/error_dialog.dart';
 import 'package:flutter_todo_list/providers/todo_list_provider.dart';
 
 class TodoList extends StatefulWidget {
@@ -16,44 +17,27 @@ class _TodoListState extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoListProvider>(context, listen: false).fetchTodos(onError: showError);
+    Provider.of<TodoListProvider>(context, listen: false).getTodos(onError: _onError);
   }
 
-  void showError(String? error) {
-    showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Oops!'),
-          content: Text('$error'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void _onError(String error) {
+    ErrorDialog.show(context, error);
   }
-
-  final _doneTextStyle = const TextStyle(
-    color: Colors.grey,
-    decoration: TextDecoration.lineThrough,
-  );
 
   void _toggleTodo(int id) {
-    Provider.of<TodoListProvider>(context, listen: false).toggleTodo(id: id, onError: showError);
+    Provider.of<TodoListProvider>(context, listen: false).toggleTodo(id, onError: _onError);
   }
 
   void _deleteTodo(int id) {
-    Provider.of<TodoListProvider>(context, listen: false).deleteTodo(id: id, onError: showError);
+    Provider.of<TodoListProvider>(context, listen: false).deleteTodo(id, onError: _onError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {
+    final doneTextStyle = const TextStyle(
+      color: Colors.grey,
+      decoration: TextDecoration.lineThrough,
+    );
+
     final tiles = todos.map((Todo todo) {
       final int index = todos.indexOf(todo);
       final bool isDone = todo.isDone;
@@ -64,7 +48,7 @@ class _TodoListState extends State<TodoList> {
         child: ListTile(
           title: Text(
             todo.text,
-            style: isDone ? _doneTextStyle : null,
+            style: isDone ? doneTextStyle : null,
           ),
           leading: IconButton(
             icon: Icon(isDone ? Icons.check_box : Icons.check_box_outline_blank),
@@ -77,7 +61,7 @@ class _TodoListState extends State<TodoList> {
           child: Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: EdgeInsets.only(right: 10.0),
+              padding: EdgeInsets.only(right: 20.0),
               child: Icon(Icons.delete, color: Colors.white),
             ),
           ),

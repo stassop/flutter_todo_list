@@ -17,7 +17,7 @@ class _AddTodoState extends State<AddTodo> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      final sanitizedText = _controller.text.trim().replaceAll(RegExp(r'\s{2,}'), ' ');
+      final String sanitizedText = _controller.text.trim().replaceAll(RegExp(r'\s{2,}'), ' ');
       final AddTodoProvider provider = Provider.of<AddTodoProvider>(context, listen: false);
       if (provider.text != sanitizedText) {
         provider.text = sanitizedText;
@@ -47,7 +47,7 @@ class _AddTodoState extends State<AddTodo> {
         return AddTodoTransition(
           isVisible: provider.isVisible,
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            padding: EdgeInsets.all(20.0),
             child: TextField(
               autofocus: true,
               controller: _controller,
