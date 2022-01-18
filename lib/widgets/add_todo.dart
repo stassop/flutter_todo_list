@@ -44,54 +44,31 @@ class _AddTodoState extends State<AddTodo> {
         if (_controller.text != provider.text) {
           _controller.text = provider.text;
         }
-        return AddTodoTransition(
-          isVisible: provider.isVisible,
-          child: Container(
-            padding: EdgeInsets.all(20.0),
-            child: TextField(
-              autofocus: true,
-              controller: _controller,
-              decoration: InputDecoration(
-                labelText: 'New todo',
-                suffixIcon: provider.hasText
-                  ? IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: _clear,
-                    )
-                  : null,
+        return ClipRect(
+          child: AnimatedAlign(
+            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: 200),
+            heightFactor: provider.isVisible ? 1 : 0,
+            alignment: Alignment.topCenter,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20.0),
+              child: TextField(
+                autofocus: true,
+                controller: _controller,
+                decoration: InputDecoration(
+                  labelText: 'New todo',
+                  suffixIcon: provider.hasText
+                    ? IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: _clear,
+                      )
+                    : null,
+                ),
               ),
             ),
           ),
         );
       },
-    );
-  }
-}
-
-class AddTodoTransition extends StatelessWidget {
-  const AddTodoTransition({
-    Key? key,
-    required this.child,
-    required this.isVisible,
-  }) : super(key: key);
-
-  final Widget child;
-  final bool isVisible;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: isVisible ? 1 : 0,
-      curve: Curves.easeInOut,
-      duration: Duration(milliseconds: 500),
-      child: AnimatedSize(
-        curve: Curves.easeInOut,
-        duration: Duration(milliseconds: 500),
-        child: Visibility(
-          visible: isVisible,
-          child: child,
-        ),
-      ),
     );
   }
 }
