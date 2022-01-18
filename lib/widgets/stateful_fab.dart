@@ -35,9 +35,26 @@ class _StatefulFabState extends State<StatefulFab> {
   Widget build(BuildContext context) {
     return Consumer<AddTodoProvider>(
       builder: (BuildContext context, AddTodoProvider provider, Widget? child) {
+        final Icon icon;
+        if (provider.hasText) {
+          icon = const Icon(Icons.done);
+        } else if (provider.isVisible) {
+          icon = const Icon(Icons.close);
+        } else {
+          icon = const Icon(Icons.add);
+        }
+
+        void onPressed() {
+          if (provider.hasText) {
+            _addTodo(provider.text);
+          } else {
+            _toggleAddTodo();
+          }
+        }
+
         return AnimatedFAB(
-          onPressed: provider.hasText ? () => _addTodo(provider.text) : _toggleAddTodo,
-          child: provider.hasText ? const Icon(Icons.done) : const Icon(Icons.add),
+          onPressed: onPressed,
+          child: icon,
           backgroundColor: provider.hasText ? Colors.green : Colors.blue,
         );
       },

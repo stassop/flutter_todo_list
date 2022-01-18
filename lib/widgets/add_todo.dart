@@ -47,7 +47,7 @@ class _AddTodoState extends State<AddTodo> {
         return ClipRect(
           child: AnimatedAlign(
             curve: Curves.easeInOut,
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             heightFactor: provider.isVisible ? 1 : 0,
             alignment: Alignment.topCenter,
             child: Container(
@@ -59,7 +59,7 @@ class _AddTodoState extends State<AddTodo> {
                   labelText: 'New todo',
                   suffixIcon: provider.hasText
                     ? IconButton(
-                        icon: Icon(Icons.clear),
+                        icon: const Icon(Icons.clear),
                         onPressed: _clear,
                       )
                     : null,

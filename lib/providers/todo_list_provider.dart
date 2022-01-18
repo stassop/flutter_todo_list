@@ -89,9 +89,7 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  void toggleTodo(int id, {Function(String)? onError}) async {
-    final bool isDone = _todos.firstWhere((todo) => todo.id == id).isDone;
-
+  void toggleTodo(int id, bool isDone, {Function(String)? onError}) async {
     try {
       final response = await http.post(
         Uri.parse('http://localhost:3000/toggle'),
@@ -101,7 +99,7 @@ class TodoListProvider extends ChangeNotifier {
         },
         body: jsonEncode(<String, dynamic>{
           'id': id,
-          'isDone': !isDone,
+          'isDone': isDone,
         }),
       );
 

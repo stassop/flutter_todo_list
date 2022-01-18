@@ -71,7 +71,7 @@ class _AnimatedFABState extends State<AnimatedFAB> with SingleTickerProviderStat
      || widget.foregroundColor != foregroundColor
      || widget.backgroundColor != backgroundColor
     ) {
-      controller.reset();
+      // controller.reset();
       controller.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           setState(() {

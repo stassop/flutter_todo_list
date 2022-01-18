@@ -17,51 +17,50 @@ class _TodoListState extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoListProvider>(context, listen: false).getTodos(onError: _onError);
+    Provider.of<TodoListProvider>(context, listen: false)
+      .getTodos(onError: _onError);
   }
 
   void _onError(String error) {
     ErrorDialog.show(context, error);
   }
 
-  void _toggleTodo(int id) {
-    Provider.of<TodoListProvider>(context, listen: false).toggleTodo(id, onError: _onError);
+  void _toggleTodo(int id, bool isDone) {
+    Provider.of<TodoListProvider>(context, listen: false)
+      .toggleTodo(id, isDone, onError: _onError);
   }
 
   void _deleteTodo(int id) {
-    Provider.of<TodoListProvider>(context, listen: false).deleteTodo(id, onError: _onError);
+    Provider.of<TodoListProvider>(context, listen: false)
+      .deleteTodo(id, onError: _onError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {
     final doneTextStyle = const TextStyle(
-      color: Colors.grey,
       decoration: TextDecoration.lineThrough,
     );
 
     final tiles = todos.map((Todo todo) {
       final int index = todos.indexOf(todo);
-      final bool isDone = todo.isDone;
       return Dismissible(
         key: Key('$todo$index'), // required
         direction: DismissDirection.endToStart,
         onDismissed: (DismissDirection direction) => _deleteTodo(todo.id),
-        child: ListTile(
+        child: CheckboxListTile(
           title: Text(
             todo.text,
-            style: isDone ? doneTextStyle : null,
+            style: todo.isDone ? doneTextStyle : null,
           ),
-          leading: IconButton(
-            icon: Icon(isDone ? Icons.check_box : Icons.check_box_outline_blank),
-            color: isDone ? Colors.blue : Colors.grey,
-            onPressed: () => _toggleTodo(todo.id),
-          ),
+          value: todo.isDone,
+          controlAffinity: ListTileControlAffinity.leading,
+          onChanged: (bool? value) => _toggleTodo(todo.id, value ?? false),
         ),
         background: Container(
           color: Colors.red,
-          child: Align(
+          child: const Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding:  EdgeInsets.only(right: 20.0),
               child: Icon(Icons.delete, color: Colors.white),
             ),
           ),
@@ -77,14 +76,14 @@ class _TodoListState extends State<TodoList> {
       child: Consumer<TodoListProvider>(
         builder: (BuildContext context, TodoListProvider provider, Widget? child) {
           if (provider.todos.isNotEmpty) {
-            final tiles = _buildTiles(provider.todos);
+            final List<Widget> tiles = _buildTiles(provider.todos);
             return ListView(children: tiles);
           } else if (provider.isBusy) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else {
-            return Center(
+            return const Center(
               child: Text('Todo List is empty'),
             );
           }
