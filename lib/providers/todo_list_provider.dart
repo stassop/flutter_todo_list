@@ -25,17 +25,23 @@ class Todo {
 }
 
 class TodoListProvider extends ChangeNotifier {
+  final http.Client client;
+
+  TodoListProvider([http.Client? client])
+    : this.client = client ?? http.Client();
+
   List<Todo> _todos = [];
   bool _isBusy = false;
   // getters
   bool get isBusy => _isBusy;
   List<Todo> get todos => _todos;
 
-  void getTodos({Function(String)? onError}) async {
+  Future getTodos([Function(String)? onError]) async {
     _isBusy = true;
 
     try {
-      final response = await http.get(Uri.parse('http://localhost:3000/'));
+      final http.Response response = await client.get(Uri.parse('http://localhost:3000/'));
+
       if (response.statusCode == 200) {
         final List<Map<String, dynamic>> list = jsonDecode(response.body).cast<Map<String, dynamic>>();
         _todos = list.map<Todo>((json) => Todo.fromJson(json)).toList();
@@ -55,9 +61,9 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  void addTodo(String text, {Function(String)? onError, Function()? onSuccess}) async {
+  Future addTodo(String text, [Function? onSuccess, Function(String)? onError]) async {
     try {
-      final response = await http.post(
+      final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/add'),
         headers: <String, String>{
           'Accept': 'application/json',
@@ -89,9 +95,9 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  void toggleTodo(int id, bool isDone, {Function(String)? onError}) async {
+  Future toggleTodo(int id, bool isDone, [Function(String)? onError]) async {
     try {
-      final response = await http.post(
+      final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/toggle'),
         headers: <String, String>{
           'Accept': 'application/json',
@@ -121,9 +127,9 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  void deleteTodo(int id, {Function(String)? onError}) async {
+  Future deleteTodo(int id, [Function(String)? onError]) async {
     try {
-      final response = await http.post(
+      final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/delete'),
         headers: <String, String>{
           'Accept': 'application/json',

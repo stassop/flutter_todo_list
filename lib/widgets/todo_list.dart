@@ -18,7 +18,7 @@ class _TodoListState extends State<TodoList> {
   void initState() {
     super.initState();
     Provider.of<TodoListProvider>(context, listen: false)
-      .getTodos(onError: _onError);
+      .getTodos(_onError);
   }
 
   void _onError(String error) {
@@ -27,12 +27,12 @@ class _TodoListState extends State<TodoList> {
 
   void _toggleTodo(int id, bool isDone) {
     Provider.of<TodoListProvider>(context, listen: false)
-      .toggleTodo(id, isDone, onError: _onError);
+      .toggleTodo(id, isDone, _onError);
   }
 
   void _deleteTodo(int id) {
     Provider.of<TodoListProvider>(context, listen: false)
-      .deleteTodo(id, onError: _onError);
+      .deleteTodo(id, _onError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {

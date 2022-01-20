@@ -16,7 +16,7 @@ class StatefulFab extends StatefulWidget {
 class _StatefulFabState extends State<StatefulFab> {
   void _addTodo(String text) {
     Provider.of<TodoListProvider>(context, listen: false)
-      .addTodo(text, onSuccess: _onAddTodoSuccess, onError: _onAddTodoError);
+      .addTodo(text, _onAddTodoSuccess, _onAddTodoError);
   }
 
   void _onAddTodoSuccess() {
