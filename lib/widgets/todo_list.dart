@@ -4,21 +4,20 @@ import 'package:provider/provider.dart';
 import 'package:flutter_todo_list/widgets/error_dialog.dart';
 import 'package:flutter_todo_list/providers/todo_list_provider.dart';
 
-class TodoList extends StatefulWidget {
+class TodoList<T extends TodoListProvider> extends StatefulWidget {
   const TodoList({
     Key? key
   }) : super(key: key);
 
   @override
-  State<TodoList> createState() => _TodoListState();
+  State<TodoList> createState() => _TodoListState<T>();
 }
 
-class _TodoListState extends State<TodoList> {
+class _TodoListState<T extends TodoListProvider> extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TodoListProvider>(context, listen: false)
-      .getTodos(_onError);
+    Provider.of<T>(context, listen: false).getTodos(onError: _onError);
   }
 
   void _onError(String error) {
@@ -26,13 +25,11 @@ class _TodoListState extends State<TodoList> {
   }
 
   void _toggleTodo(int id, bool isDone) {
-    Provider.of<TodoListProvider>(context, listen: false)
-      .toggleTodo(id, isDone, _onError);
+    Provider.of<T>(context, listen: false).toggleTodo(id, isDone, onError: _onError);
   }
 
   void _deleteTodo(int id) {
-    Provider.of<TodoListProvider>(context, listen: false)
-      .deleteTodo(id, _onError);
+    Provider.of<T>(context, listen: false).deleteTodo(id, onError: _onError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {
@@ -72,23 +69,21 @@ class _TodoListState extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded( // accommodate for list dimensions overflow
-      child: Consumer<TodoListProvider>(
-        builder: (BuildContext context, TodoListProvider provider, Widget? child) {
-          if (provider.todos.isNotEmpty) {
-            final List<Widget> tiles = _buildTiles(provider.todos);
-            return ListView(children: tiles);
-          } else if (provider.isBusy) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return const Center(
-              child: Text('Todo List is empty'),
-            );
-          }
-        },
-      ),
+    return Consumer<T>(
+      builder: (BuildContext context, T provider, Widget? child) {
+        if (provider.todos.isNotEmpty) {
+          final List<Widget> tiles = _buildTiles(provider.todos);
+          return ListView(children: tiles);
+        } else if (provider.isBusy) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return const Center(
+            child: Text('Todo list is empty'),
+          );
+        }
+      },
     );
   }
 }

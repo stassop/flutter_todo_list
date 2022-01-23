@@ -7,7 +7,6 @@ import 'package:mockito/mockito.dart';
 
 import 'package:flutter_todo_list/providers/todo_list_provider.dart';
 
-// To generate mocks run `flutter pub run build_runner build`
 import 'todo_list_provider_test.mocks.dart';
 
 // Generic mock function class
@@ -20,7 +19,7 @@ class MockOnError extends Mock {
 }
 
 // Generate a MockClient using the Mockito package.
-// Create new instances of this class in each test.
+// To generate mocks run `flutter pub run build_runner build`
 @GenerateMocks([http.Client])
 void main() {
   group('TodoListProvider', () {
@@ -55,7 +54,7 @@ void main() {
         .get(Uri.parse('http://localhost:3000/')))
         .thenAnswer((_) async => http.Response('{"error": "Oops!"}', 500));
 
-      await provider.getTodos(onError);
+      await provider.getTodos(onError: onError);
 
       verify(onError('Oops!')).called(1);
       verify(notifyListeners()).called(1);
@@ -76,7 +75,7 @@ void main() {
         ))
         .thenAnswer((_) async => http.Response('{"text": "Second todo", "id": 2, "isDone": false}', 200));
 
-      await provider.addTodo('Second todo', onSuccess);
+      await provider.addTodo('Second todo', onSuccess: onSuccess);
 
       expect(provider.todos.length, 2);
       verify(onSuccess()).called(1);

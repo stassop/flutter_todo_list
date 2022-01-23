@@ -32,7 +32,9 @@ class MyApp extends StatelessWidget {
         body: Column(
           children: [
             AddTodo(),
-            TodoList(),
+            Expanded(
+              child: TodoList<TodoListProvider>()
+            ),
           ],
         ),
         floatingActionButton: StatefulFab(),

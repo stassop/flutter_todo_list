@@ -13,6 +13,11 @@ For Android run
 adb reverse tcp:3000 tcp:3000
 ```
 
+Build test mocks
+```
+flutter pub run build_runner build
+```
+
 Run the app
 
 ```

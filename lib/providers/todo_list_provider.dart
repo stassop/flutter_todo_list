@@ -36,7 +36,7 @@ class TodoListProvider extends ChangeNotifier {
   bool get isBusy => _isBusy;
   List<Todo> get todos => _todos;
 
-  Future getTodos([Function(String)? onError]) async {
+  Future<void> getTodos({Function(String)? onError}) async {
     _isBusy = true;
 
     try {
@@ -61,7 +61,7 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  Future addTodo(String text, [Function? onSuccess, Function(String)? onError]) async {
+  Future<void> addTodo(String text, {Function? onSuccess, Function(String)? onError}) async {
     try {
       final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/add'),
@@ -95,7 +95,7 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  Future toggleTodo(int id, bool isDone, [Function(String)? onError]) async {
+  Future<void> toggleTodo(int id, bool isDone, {Function(String)? onError}) async {
     try {
       final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/toggle'),
@@ -127,7 +127,7 @@ class TodoListProvider extends ChangeNotifier {
     }
   }
 
-  Future deleteTodo(int id, [Function(String)? onError]) async {
+  Future<void> deleteTodo(int id, {Function(String)? onError}) async {
     try {
       final http.Response response = await client.post(
         Uri.parse('http://localhost:3000/delete'),
