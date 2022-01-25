@@ -39,7 +39,7 @@ void main() {
       verify(notifyListeners()).called(1);
     });
 
-    test('Should toggle text field', () {
+    test('Should toggle visibility', () {
       provider.toggle();
 
       expect(provider.isVisible, true);

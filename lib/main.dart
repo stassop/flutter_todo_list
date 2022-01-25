@@ -31,13 +31,13 @@ class MyApp extends StatelessWidget {
         ),
         body: Column(
           children: [
-            AddTodo(),
+            AddTodo<AddTodoProvider>(),
             Expanded(
               child: TodoList<TodoListProvider>()
             ),
           ],
         ),
-        floatingActionButton: StatefulFab(),
+        floatingActionButton: StatefulFAB<AddTodoProvider, TodoListProvider>(),
       ),
     );
   }

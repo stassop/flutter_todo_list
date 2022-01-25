@@ -42,8 +42,13 @@ void main() {
         .get(Uri.parse('http://localhost:3000/')))
         .thenAnswer((_) async => http.Response('[{"text": "First todo", "id": 1, "isDone": false}]', 200));
 
-      await provider.getTodos();
+      Future<void> getTodos = provider.getTodos();
 
+      expect(provider.isBusy, true);
+
+      await getTodos;
+
+      expect(provider.isBusy, false);
       expect(provider.todos.length, 1);
       verify(notifyListeners()).called(1);
     });

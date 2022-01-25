@@ -30,10 +30,10 @@ class TodoListProvider extends ChangeNotifier {
   TodoListProvider([http.Client? client])
     : this.client = client ?? http.Client();
 
-  List<Todo> _todos = [];
   bool _isBusy = false;
-  // getters
   bool get isBusy => _isBusy;
+
+  List<Todo> _todos = [];
   List<Todo> get todos => _todos;
 
   Future<void> getTodos({Function(String)? onError}) async {

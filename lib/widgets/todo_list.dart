@@ -17,7 +17,7 @@ class _TodoListState<T extends TodoListProvider> extends State<TodoList> {
   @override
   void initState() {
     super.initState();
-    Provider.of<T>(context, listen: false).getTodos(onError: _onError);
+    context.read<T>().getTodos(onError: _onError);
   }
 
   void _onError(String error) {
@@ -25,11 +25,11 @@ class _TodoListState<T extends TodoListProvider> extends State<TodoList> {
   }
 
   void _toggleTodo(int id, bool isDone) {
-    Provider.of<T>(context, listen: false).toggleTodo(id, isDone, onError: _onError);
+    context.read<T>().toggleTodo(id, isDone, onError: _onError);
   }
 
   void _deleteTodo(int id) {
-    Provider.of<T>(context, listen: false).deleteTodo(id, onError: _onError);
+    context.read<T>().deleteTodo(id, onError: _onError);
   }
 
   List<Widget> _buildTiles(List<Todo> todos) {
@@ -69,21 +69,19 @@ class _TodoListState<T extends TodoListProvider> extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<T>(
-      builder: (BuildContext context, T provider, Widget? child) {
-        if (provider.todos.isNotEmpty) {
-          final List<Widget> tiles = _buildTiles(provider.todos);
-          return ListView(children: tiles);
-        } else if (provider.isBusy) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return const Center(
-            child: Text('Todo list is empty'),
-          );
-        }
-      },
-    );
+    final T provider = context.watch<T>();
+
+    if (provider.todos.isNotEmpty) {
+      final List<Widget> tiles = _buildTiles(provider.todos);
+      return ListView(children: tiles);
+    } else if (provider.isBusy) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return const Center(
+        child: Text('Todo list is empty'),
+      );
+    }
   }
 }
