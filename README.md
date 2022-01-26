@@ -8,14 +8,9 @@ Start the server
 node server/app.js
 ```
 
-For Android run
+Make it work on Android
 ```
 adb reverse tcp:3000 tcp:3000
-```
-
-Build test mocks
-```
-flutter pub run build_runner build
 ```
 
 Run the app
@@ -23,6 +18,35 @@ Run the app
 ```
 flutter run
 ```
+
+## Running tests
+
+Generate mocks
+```
+flutter pub run build_runner build
+```
+
+Start the server
+
+```
+node server/app.js
+```
+
+Make it work on Android
+```
+adb reverse tcp:3000 tcp:3000
+```
+
+Run unit and widget tests
+```
+flutter test
+```
+
+Run integration tests
+```
+flutter test integration_test
+```
+
 
 ## More Info
 

@@ -14,85 +14,87 @@ import 'add_todo_test.mocks.dart';
 // To generate mocks run `flutter pub run build_runner build`
 @GenerateMocks([BuildContext, AddTodoProvider])
 void main() {
-  testWidgets('Should show collpased state', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final provider = MockAddTodoProvider();
+  group('AddTodo', () {
+    testWidgets('Should show collpased state', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final provider = MockAddTodoProvider();
 
-    when(provider.text).thenReturn('');
-    when(provider.hasText).thenReturn(false);
-    when(provider.isVisible).thenReturn(false);
+      when(provider.text).thenReturn('');
+      when(provider.hasText).thenReturn(false);
+      when(provider.isVisible).thenReturn(false);
 
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => provider,
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: AddTodo<MockAddTodoProvider>(),
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (context) => provider,
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: AddTodo<MockAddTodoProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(tester.widget<AnimatedAlign>(
-      find.ancestor(
-        of: find.byType(TextField),
-        matching: find.byType(AnimatedAlign),
-      )
-    ).heightFactor, 0); // is collapsed
-  });
+      expect(tester.widget<AnimatedAlign>(
+        find.ancestor(
+          of: find.byType(TextField),
+          matching: find.byType(AnimatedAlign),
+        )
+      ).heightFactor, 0); // is collapsed
+    });
 
-  testWidgets('Should show open state', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final provider = MockAddTodoProvider();
+    testWidgets('Should show open state', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final provider = MockAddTodoProvider();
 
-    when(provider.text).thenReturn('');
-    when(provider.hasText).thenReturn(false);
-    when(provider.isVisible).thenReturn(true);
+      when(provider.text).thenReturn('');
+      when(provider.hasText).thenReturn(false);
+      when(provider.isVisible).thenReturn(true);
 
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => provider,
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: AddTodo<MockAddTodoProvider>(),
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (context) => provider,
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: AddTodo<MockAddTodoProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(tester.widget<AnimatedAlign>(
-      find.ancestor(
-        of: find.byType(TextField),
-        matching: find.byType(AnimatedAlign),
-      )
-    ).heightFactor, 1); // is open
-  });
+      expect(tester.widget<AnimatedAlign>(
+        find.ancestor(
+          of: find.byType(TextField),
+          matching: find.byType(AnimatedAlign),
+        )
+      ).heightFactor, 1); // is open
+    });
 
-  testWidgets('Should handle text clearing', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final provider = MockAddTodoProvider();
+    testWidgets('Should handle text clearing', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final provider = MockAddTodoProvider();
 
-    when(provider.text).thenReturn('Another todo');
-    when(provider.hasText).thenReturn(true);
-    when(provider.isVisible).thenReturn(true);
+      when(provider.text).thenReturn('Another todo');
+      when(provider.hasText).thenReturn(true);
+      when(provider.isVisible).thenReturn(true);
 
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => provider,
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: AddTodo<MockAddTodoProvider>(),
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (context) => provider,
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: AddTodo<MockAddTodoProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.widgetWithText(TextField, 'Another todo'), findsOneWidget);
-    expect(find.widgetWithIcon(IconButton, Icons.clear), findsOneWidget);
+      expect(find.widgetWithText(TextField, 'Another todo'), findsOneWidget);
+      expect(find.widgetWithIcon(IconButton, Icons.clear), findsOneWidget);
 
-    await tester.tap(find.widgetWithIcon(IconButton, Icons.clear));
-    await tester.pump(); // rebuild the widget with the new item
+      await tester.tap(find.widgetWithIcon(IconButton, Icons.clear));
+      await tester.pump(); // rebuild the widget with the new item
 
-    verify(provider.clear()).called(1);
+      verify(provider.clear()).called(1);
+    });
   });
 }

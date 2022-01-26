@@ -2,15 +2,14 @@
 // in flutter_todo_list/test/widgets/stateful_fab_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i9;
-import 'dart:ui' as _i7;
+import 'dart:async' as _i8;
+import 'dart:ui' as _i6;
 
-import 'package:flutter/foundation.dart' as _i4;
-import 'package:flutter/rendering.dart' as _i3;
+import 'package:flutter/foundation.dart' as _i3;
 import 'package:flutter/src/widgets/framework.dart' as _i2;
-import 'package:flutter_todo_list/providers/add_todo_provider.dart' as _i6;
-import 'package:flutter_todo_list/providers/todo_list_provider.dart' as _i8;
-import 'package:http/http.dart' as _i5;
+import 'package:flutter_todo_list/providers/add_todo_provider.dart' as _i5;
+import 'package:flutter_todo_list/providers/todo_list_provider.dart' as _i7;
+import 'package:http/http.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -37,12 +36,12 @@ class _FakeInheritedWidget_1 extends _i1.Fake implements _i2.InheritedWidget {
 class _FakeDiagnosticsNode_2 extends _i1.Fake implements _i3.DiagnosticsNode {
   @override
   String toString(
-          {_i4.TextTreeConfiguration? parentConfiguration,
+          {_i3.TextTreeConfiguration? parentConfiguration,
           _i3.DiagnosticLevel? minLevel = _i3.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeClient_3 extends _i1.Fake implements _i5.Client {}
+class _FakeClient_3 extends _i1.Fake implements _i4.Client {}
 
 /// A class which mocks [BuildContext].
 ///
@@ -76,15 +75,15 @@ class MockBuildContext extends _i1.Mock implements _i2.BuildContext {
           returnValueForMissingStub: null);
   @override
   _i3.DiagnosticsNode describeElement(String? name,
-          {_i4.DiagnosticsTreeStyle? style =
-              _i4.DiagnosticsTreeStyle.errorProperty}) =>
+          {_i3.DiagnosticsTreeStyle? style =
+              _i3.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeElement, [name], {#style: style}),
           returnValue: _FakeDiagnosticsNode_2()) as _i3.DiagnosticsNode);
   @override
   _i3.DiagnosticsNode describeWidget(String? name,
-          {_i4.DiagnosticsTreeStyle? style =
-              _i4.DiagnosticsTreeStyle.errorProperty}) =>
+          {_i3.DiagnosticsTreeStyle? style =
+              _i3.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeWidget, [name], {#style: style}),
           returnValue: _FakeDiagnosticsNode_2()) as _i3.DiagnosticsNode);
@@ -104,7 +103,7 @@ class MockBuildContext extends _i1.Mock implements _i2.BuildContext {
 /// A class which mocks [AddTodoProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAddTodoProvider extends _i1.Mock implements _i6.AddTodoProvider {
+class MockAddTodoProvider extends _i1.Mock implements _i5.AddTodoProvider {
   MockAddTodoProvider() {
     _i1.throwOnMissingStub(this);
   }
@@ -138,11 +137,11 @@ class MockAddTodoProvider extends _i1.Mock implements _i6.AddTodoProvider {
   void toggle() => super.noSuchMethod(Invocation.method(#toggle, []),
       returnValueForMissingStub: null);
   @override
-  void addListener(_i7.VoidCallback? listener) =>
+  void addListener(_i6.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
+  void removeListener(_i6.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -157,58 +156,58 @@ class MockAddTodoProvider extends _i1.Mock implements _i6.AddTodoProvider {
 /// A class which mocks [TodoListProvider].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTodoListProvider extends _i1.Mock implements _i8.TodoListProvider {
+class MockTodoListProvider extends _i1.Mock implements _i7.TodoListProvider {
   MockTodoListProvider() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i5.Client get client => (super.noSuchMethod(Invocation.getter(#client),
-      returnValue: _FakeClient_3()) as _i5.Client);
+  _i4.Client get client => (super.noSuchMethod(Invocation.getter(#client),
+      returnValue: _FakeClient_3()) as _i4.Client);
   @override
   bool get isBusy =>
       (super.noSuchMethod(Invocation.getter(#isBusy), returnValue: false)
           as bool);
   @override
-  List<_i8.Todo> get todos =>
-      (super.noSuchMethod(Invocation.getter(#todos), returnValue: <_i8.Todo>[])
-          as List<_i8.Todo>);
+  List<_i7.Todo> get todos =>
+      (super.noSuchMethod(Invocation.getter(#todos), returnValue: <_i7.Todo>[])
+          as List<_i7.Todo>);
   @override
   bool get hasListeners =>
       (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
           as bool);
   @override
-  _i9.Future<void> getTodos({dynamic Function(String)? onError}) =>
+  _i8.Future<void> getTodos({dynamic Function(String)? onError}) =>
       (super.noSuchMethod(Invocation.method(#getTodos, [], {#onError: onError}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override
-  _i9.Future<void> addTodo(String? text,
+  _i8.Future<void> addTodo(String? text,
           {Function? onSuccess, dynamic Function(String)? onError}) =>
       (super.noSuchMethod(
           Invocation.method(
               #addTodo, [text], {#onSuccess: onSuccess, #onError: onError}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override
-  _i9.Future<void> toggleTodo(int? id, bool? isDone,
+  _i8.Future<void> toggleTodo(int? id, bool? isDone,
           {dynamic Function(String)? onError}) =>
       (super.noSuchMethod(
           Invocation.method(#toggleTodo, [id, isDone], {#onError: onError}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override
-  _i9.Future<void> deleteTodo(int? id, {dynamic Function(String)? onError}) =>
+  _i8.Future<void> deleteTodo(int? id, {dynamic Function(String)? onError}) =>
       (super.noSuchMethod(
           Invocation.method(#deleteTodo, [id], {#onError: onError}),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override
-  void addListener(_i7.VoidCallback? listener) =>
+  void addListener(_i6.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
+  void removeListener(_i6.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override

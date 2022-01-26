@@ -15,90 +15,92 @@ import 'stateful_fab_test.mocks.dart';
 // To generate mocks run `flutter pub run build_runner build`
 @GenerateMocks([BuildContext, AddTodoProvider, TodoListProvider])
 void main() {
-  testWidgets('Should show an add icon and handle clicks', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final provider = MockAddTodoProvider();
+  group('StatefulFAB', () {
+    testWidgets('Should show an add icon and handle clicks', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final provider = MockAddTodoProvider();
 
-    when(provider.hasText).thenReturn(false);
-    when(provider.isVisible).thenReturn(false);
+      when(provider.hasText).thenReturn(false);
+      when(provider.isVisible).thenReturn(false);
 
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => provider,
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (context) => provider,
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.widgetWithIcon(FloatingActionButton, Icons.add), findsOneWidget);
+      expect(find.widgetWithIcon(FloatingActionButton, Icons.add), findsOneWidget);
 
-    await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
-    await tester.pump(); // rebuild the widget with the new item
+      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
+      await tester.pump(); // rebuild the widget with the new item
 
-    verify(provider.toggle()).called(1);
-  });
+      verify(provider.toggle()).called(1);
+    });
 
-  testWidgets('Should show a close icon and handle clicks', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final provider = MockAddTodoProvider();
+    testWidgets('Should show a close icon and handle clicks', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final provider = MockAddTodoProvider();
 
-    when(provider.hasText).thenReturn(false);
-    when(provider.isVisible).thenReturn(true);
+      when(provider.hasText).thenReturn(false);
+      when(provider.isVisible).thenReturn(true);
 
-    await tester.pumpWidget(
-      ChangeNotifierProvider(
-        create: (context) => provider,
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+      await tester.pumpWidget(
+        ChangeNotifierProvider(
+          create: (context) => provider,
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.widgetWithIcon(FloatingActionButton, Icons.close), findsOneWidget);
+      expect(find.widgetWithIcon(FloatingActionButton, Icons.close), findsOneWidget);
 
-    await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.close));
-    await tester.pump(); // rebuild the widget with the new item
+      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.close));
+      await tester.pump(); // rebuild the widget with the new item
 
-    verify(provider.toggle()).called(1);
-  });
+      verify(provider.toggle()).called(1);
+    });
 
-  testWidgets('Should show a done icon and handle clicks', (WidgetTester tester) async {
-    final context = MockBuildContext();
-    final addTodoProvider = MockAddTodoProvider();
-    final todoListProvider = MockTodoListProvider();
+    testWidgets('Should show a done icon and handle clicks', (WidgetTester tester) async {
+      final context = MockBuildContext();
+      final addTodoProvider = MockAddTodoProvider();
+      final todoListProvider = MockTodoListProvider();
 
-    when(addTodoProvider.text).thenReturn('Another todo');
-    when(addTodoProvider.hasText).thenReturn(true);
-    when(addTodoProvider.isVisible).thenReturn(true);
+      when(addTodoProvider.text).thenReturn('Another todo');
+      when(addTodoProvider.hasText).thenReturn(true);
+      when(addTodoProvider.isVisible).thenReturn(true);
 
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => addTodoProvider),
-          ChangeNotifierProvider(create: (context) => todoListProvider),
-        ],
-        child: MaterialApp( // required for widgets to render correctly
-          home: Scaffold(
-            body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => addTodoProvider),
+            ChangeNotifierProvider(create: (context) => todoListProvider),
+          ],
+          child: MaterialApp( // required for widgets to render correctly
+            home: Scaffold(
+              body: StatefulFAB<MockAddTodoProvider, MockTodoListProvider>(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.widgetWithIcon(FloatingActionButton, Icons.done), findsOneWidget);
+      expect(find.widgetWithIcon(FloatingActionButton, Icons.done), findsOneWidget);
 
-    await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.done));
-    await tester.pump(); // rebuild the widget with the new item
+      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.done));
+      await tester.pump(); // rebuild the widget with the new item
 
-    verify(todoListProvider.addTodo(
-      'Another todo',
-      onSuccess: anyNamed('onSuccess'), // stub
-      onError: anyNamed('onError'), // stub
-    )).called(1);
+      verify(todoListProvider.addTodo(
+        'Another todo',
+        onSuccess: anyNamed('onSuccess'), // stub
+        onError: anyNamed('onError'), // stub
+      )).called(1);
+    });
   });
 }
