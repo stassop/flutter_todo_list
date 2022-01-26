@@ -1,6 +1,6 @@
 # Flutter Todo List
 
-![Screenshot](screenshot.png)
+![Screenshot](Screenshot.png)
 
 ## Getting Started
 
