@@ -1,5 +1,7 @@
 # Flutter Todo List
 
+![Screenshot](screenshot.png)
+
 ## Getting Started
 
 Start the server
@@ -46,7 +48,6 @@ Run integration tests
 ```
 flutter test integration_test
 ```
-
 
 ## More Info
 
